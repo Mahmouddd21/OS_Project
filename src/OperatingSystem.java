@@ -6,8 +6,8 @@ enum EventsOS{
     DISK_CONTROLLER,
     REQ_MORE_HEAP,
     DIVISON_BY_ZERO,
-    ACCESS_PRIVILIGED_MEMORY;
-};
+    ACCESS_PRIVILIGED_MEMORY
+}
 
 public class OperatingSystem {
     public static String memory[] = new String[6];
@@ -74,13 +74,13 @@ public class OperatingSystem {
                 break;
             case REQ_MORE_HEAP:
                 System.out.println("Checking if memory is free...");
-                try {
-                    System.out.println("Free memory is available");
-                }catch(Exception e){
-                    System.out.println(Arrays.toString(memory));
-                    System.out.println("!Error!\n!Memory is Full! Expanding Heap");
-                    heapEnd++;
-                }
+                    if(heapEnd < heapIndex)
+                        System.out.println("Free memory is available");
+                    else {
+                        System.out.println(Arrays.toString(memory));
+                        System.out.println("!Error!\n!Memory is Full! Expanding Heap");
+                        heapEnd++;
+                    }
                 break;
             case DIVISON_BY_ZERO:
                 //Division by Zero
@@ -91,7 +91,8 @@ public class OperatingSystem {
                 }
                 catch(Exception e){
                     //action
-                    throw new Exception("!Error!\n!Attempting to Divide by zero!");
+                    System.out.println("!Error!\n!Attempting to Divide by zero!");
+                    return;
                 }
                 break;
             case ACCESS_PRIVILIGED_MEMORY:
@@ -104,13 +105,9 @@ public class OperatingSystem {
                     if(heapIndex != heapEnd) {
                         memory[heapIndex++] = input;
                         System.out.println(Arrays.toString(memory));
-                    }else if(heapIndex == heapEnd){
+                    }else {
                         System.out.println("Heap is full... Expanding Heap");
                         heapEnd++;
-                    }else{
-                        System.out.println("public memory is full... storing in privileged");
-                        memory[heapIndex++] = input;
-                        System.out.println(Arrays.toString(memory));
                     }
                 }catch (Exception e){
                     //action
