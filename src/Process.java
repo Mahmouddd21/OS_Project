@@ -1,13 +1,17 @@
 import java.io.*;
-import java.util.Scanner;
+import java.util.*;
 //TEST FOR GITHUB
 public class Process {
     private int processID;
     private int programCounter;
     private boolean processState; //CHANGE INTO ENUM {READY, NEW, FINISHED, BLOCKED}
-    private int priority;
+    private int priority; //having 3 Qs seems inefficient fa better to have one PQ
     static String var;
     static String x;
+    enum TTY{
+        //Terminal or TTY: terminal to which the process is connected. han-save feeh which schedulaing type we are calling
+        ROUND_ROBIN, MLQS, FCFS
+    }
 
     public int getProcessID() {
         return processID;
@@ -31,6 +35,18 @@ public class Process {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public void  Scheduler_FCFS(){
+
+    }
+
+    public void Scheduler_RR(){
+
+    }
+
+    public void Scheduler_MLQS(){
+
     }
 
     public Process(int processID, int priority, int programCounter) throws IOException {
