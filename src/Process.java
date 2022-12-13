@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 //TEST FOR GITHUB
 public class Process {
@@ -36,11 +33,18 @@ public class Process {
         this.priority = priority;
     }
 
-    public Process(int processID, int priority, int programCounter){
+    public Process(int processID, int priority, int programCounter) throws IOException {
         this.processID = processID;
         this.priority = priority;
         this.programCounter = programCounter;
-        processState = false;
+       // processState = false;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String input = br.readLine();
+        String [] choice = input.split(" ");
+        if (choice[0].equals("print") || choice[0].equals("readfile"))
+            processA(choice);
+        else if (choice[0].equals("assign") || choice[0].equals("writefile"))
+            processB(choice[1],choice[2]);//Still incomplete NOT SURE!
     }
 
     public boolean isProcessState() {
