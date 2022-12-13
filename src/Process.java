@@ -7,10 +7,34 @@ import java.util.Scanner;
 public class Process {
     private int processID;
     private int programCounter;
-    private boolean processState;
+    private boolean processState; //CHANGE INTO ENUM {READY, NEW, FINISHED, BLOCKED}
     private int priority;
     static String var;
     static String x;
+
+    public int getProcessID() {
+        return processID;
+    }
+
+    public void setProcessID(int processID) {
+        this.processID = processID;
+    }
+
+    public int getProgramCounter() {
+        return programCounter;
+    }
+
+    public void setProgramCounter(int programCounter) {
+        this.programCounter = programCounter;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
 
     public Process(int processID, int priority, int programCounter){
         this.processID = processID;
@@ -45,6 +69,7 @@ public class Process {
     public static void assign(String s1, String s2){
         var = s1;
         x = s2;
+        // we need to check the data type w assign it as ordered
         System.out.println(x + " Has been Assigned to " + var);
     }
 
@@ -82,6 +107,13 @@ public class Process {
         }
     }
 
+    public void CreateProcess(){
+        //we will hava a process queue w it will show the current process w order which process will
+        //go first (the ordering will be executed depending on type of scheduling algorithm
+        //NOTE: SEARCH HOW TO MAKE A PROCESS INTO A NEW PROCESS
+
+    }
+
     public static void readfile(String s[]) {
         try {
             File myObj = new File(s[1]+".txt");
@@ -96,6 +128,4 @@ public class Process {
             e.printStackTrace();
         }
     }
-
-
 }
