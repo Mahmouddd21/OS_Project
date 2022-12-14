@@ -5,12 +5,32 @@ public class Process {
     private int processID;
     private int programCounter;
     private boolean processState; //CHANGE INTO ENUM {READY, NEW, FINISHED, BLOCKED}
-    private int priority; //having 3 Qs seems inefficient fa better to have one PQ
+    private int priority; //having 3 Qs; (Order from the highest priority to lowest) Q1 = systemProcess, Q2 = Interactive Process (Input/Output?)
     static String var;
     static String x;
     enum TTY{
         //Terminal or TTY: terminal to which the process is connected. han-save feeh which schedulaing type we are calling
-        ROUND_ROBIN, MLQS, FCFS
+        ROUND_ROBIN, //uses Q1 and Q2
+        MLQS,
+        FCFS
+
+        /*
+        Queuing workflow:-
+        enqueue in all queues with respect to the priority
+        for(int i = 0; i < Qnumbers; i++){
+            ba3deen go into Q[i] while !empty and exec then deque then do again
+            we check for Q1 if it is empty
+            if true we do RR for all the elements until it is empty
+            when Q1 is empty we go onto Q2
+            do the same logic as Q1
+            then after Q2 is empty
+            we execut Q3 using el fifo
+            }
+
+            we need to check what enters which queue
+         */
+
+
     }
 
     public int getProcessID() {
