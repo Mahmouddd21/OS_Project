@@ -33,6 +33,10 @@ public class Process {
 
     }
 
+    enum ProcessState{
+        NEW, READY, RUNNUNG, BLOCKED, FINISHED
+    }
+
     public int getProcessID() {
         return processID;
     }
