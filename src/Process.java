@@ -69,6 +69,13 @@ public class Process {
     }
 
     public void Scheduler_RR(){
+        int Qt = 2; //Quantum time value
+        int waitTime[],TurnAroundTime[], burstTime[], burstTimeLeft[]; //set the size with the size of the Q
+        Process res[];
+        while() { //Q is not empty
+            //exec the process for Qt value with counter and condition to make sure u keep Enq and Deq
+        }
+
 
     }
 
