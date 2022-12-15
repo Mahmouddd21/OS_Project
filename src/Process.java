@@ -8,6 +8,9 @@ public class Process {
     private int priority; //having 3 Qs; (Order from the highest priority to lowest) Q1 = systemProcess, Q2 = Interactive Process (Input/Output?)
     static String var;
     static String x;
+    static QueueObj systemQueue;
+    static QueueObj batchQueue;
+    static QueueObj interactiveQueue;
     enum TTY{
         //Terminal or TTY: terminal to which the process is connected. han-save feeh which schedulaing type we are calling
         ROUND_ROBIN, //uses Q1 and Q2
