@@ -9,11 +9,39 @@ public class Process {
     static String var;
     static String x;
     static QueueObj systemQueue; //priority highest
-    static QueueObj batchQueue;
-    static QueueObj interactiveQueue; //priority lowest
+    static QueueObj batchQueue; //priority lowest
+    static QueueObj interactiveQueue;
     static QueueObj queueOfQueues = new QueueObj(3);
+
+    public Process(int processID, int priority, int programCounter) throws IOException {
+        this.processID = processID;
+        this.priority = priority;
+        this.programCounter = programCounter;
+        // processState = false;
+        //MS1
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String input = br.readLine();
+        String [] choice = input.split(" ");
+        if (choice[0].equals("print") || choice[0].equals("readfile"))
+            processA(choice);
+        else if (choice[0].equals("assign") || choice[0].equals("writefile"))
+            processB(choice[1],choice[2]);//Still incomplete NOT SURE!
+
+        //MS2
+        System.out.println("Number of process for system queue: ");//adjust this line later
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int numOfSP = Integer.parseInt(br.readLine());
+        systemQueue = new QueueObj(numOfSP);
+
+        System.out.println("Number of process for interactive queue: ");
+
+
+    }
+
+
+
     enum TTY{
-        //Terminal or TTY: terminal to which the process is connected. han-save feeh which schedulaing type we are calling
+        //Terminal or TTY: terminal to which the process is connected. han-save feeh which scheduling type we are calling
         ROUND_ROBIN, //uses Q1 and Q2
         MLQS,
         FCFS
@@ -84,19 +112,7 @@ public class Process {
 
     }
 
-    public Process(int processID, int priority, int programCounter) throws IOException {
-        this.processID = processID;
-        this.priority = priority;
-        this.programCounter = programCounter;
-       // processState = false;
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
-        String [] choice = input.split(" ");
-        if (choice[0].equals("print") || choice[0].equals("readfile"))
-            processA(choice);
-        else if (choice[0].equals("assign") || choice[0].equals("writefile"))
-            processB(choice[1],choice[2]);//Still incomplete NOT SURE!
-    }
+
 
     public boolean isProcessState() {
         return processState;
