@@ -13,6 +13,7 @@ public class Process {
     static QueueObj interactiveQueue;
     static QueueObj queueOfQueues = new QueueObj(3);
 
+
     public Process(int processID, int priority, int programCounter) throws IOException {
         this.processID = processID;
         this.priority = priority;
@@ -46,22 +47,15 @@ public class Process {
         MLQS,
         FCFS
 
+
+
         /*
-        Queuing workflow:-
-        enqueue in all queues with respect to the priority
-        for(int i = 0; i < Qnumbers; i++){
-            ba3deen go into Q[i] while !empty and exec then deque then do again
-            we check for Q1 if it is empty
-            if true we do RR for all the elements until it is empty
-            when Q1 is empty we go onto Q2
-            do the same logic as Q1
-            then after Q2 is empty
-            we execut Q3 using el fifo
-            }
 
-            we need to check what enters which queue
+        while(input != "execute")
+            we will enqueue all the processes into the queues corresponding to their type
+            and then once we get execute as an input we will implement the queueing workflow above.
+
          */
-
 
     }
 
@@ -109,7 +103,23 @@ public class Process {
     }
 
     public void Scheduler_MLQS(){
+        /*
+        Queuing workflow:-
 
+        we will input whe process id into the queue not the entire process
+        enqueue in all queues with respect to the priority
+        for(int i = 0; i < Qnumbers; i++){
+            ba3deen go into Q[i] while !empty and exec then deque then do again
+            we check for Q1 if it is empty
+            if true we do RR for all the elements until it is empty
+            when Q1 is empty we go onto Q2
+            do the same logic as Q1
+            then after Q2 is empty
+            we execut Q3 using el fifo
+            }
+
+            we need to check what enters which queue
+         */
     }
 
 
