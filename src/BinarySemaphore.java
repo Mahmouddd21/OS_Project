@@ -1,6 +1,6 @@
 import java.util.concurrent.Semaphore;
 
-public class BinarySemaphore extends Sem{
+public class BinarySemaphore{
     private int proccesses; //takes either 0 or 1
     private QueueObj q; //queue of proccesses
 

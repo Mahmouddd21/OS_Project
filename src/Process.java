@@ -37,9 +37,6 @@ public class Process {
 
 
     }
-
-
-
     enum TTY{
         //Terminal or TTY: terminal to which the process is connected. han-save feeh which scheduling type we are calling
         ROUND_ROBIN, //uses Q1 and Q2
@@ -104,8 +101,6 @@ public class Process {
         while(!systemQueue.isEmpty()) { //Q is not empty
             //exec the process for Qt value with counter and condition to make sure u keep Enq and Deq
         }
-
-
     }
 
     public void Scheduler_MLQS(){

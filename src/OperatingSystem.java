@@ -123,24 +123,24 @@ public class OperatingSystem {
         String s[] = input.split(" ");
         switch (s[0].toLowerCase()) {
             case "print":
-                PrintProcess print = new PrintProcess(1, 4, processProgramCounter++,s, var, x);
-                print.setProcessState(true);
+                //PrintProcess print = new PrintProcess(1, 4, processProgramCounter++,s, var, x);
+                //print.setProcessState(true);
                 break;
             case "assign":
-                AssignProcess assign = new AssignProcess(2, 3, processProgramCounter++);
+                //AssignProcess assign = new AssignProcess(2, 3, processProgramCounter++);
                 var = s[1];
                 x = s[2];
                 System.out.println(x + " Has been Assigned to " + var);
-                assign.setProcessState(true);
+                //assign.setProcessState(true);
                 break;
             case "writefile":
                 String content = getContentHelper(s);
-                WriteFileProcess writefile = new WriteFileProcess(3, 1, processProgramCounter++,s[1],content);
-                writefile.setProcessState(true);
+                //WriteFileProcess writefile = new WriteFileProcess(3, 1, processProgramCounter++,s[1],content);
+                //writefile.setProcessState(true);
                 break;
             case "readfile":
-                ReadFileProcess readfile = new ReadFileProcess(4, 2, processProgramCounter++,s[1]);
-                readfile.setProcessState(true);
+                //ReadFileProcess readfile = new ReadFileProcess(4, 2, processProgramCounter++,s[1]);
+                //readfile.setProcessState(true);
                 break;
             default:
                 System.out.println("Invalid Command");
