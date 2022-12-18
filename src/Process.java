@@ -1,44 +1,57 @@
 import java.io.*;
 import java.util.*;
+
 //TEST FOR GITHUB
-public class Process {
+public class Process extends Thread{
     private int processID;
     private int programCounter;
-    private boolean processState; //CHANGE INTO ENUM {READY, NEW, FINISHED, BLOCKED}
+    private ProcessState processState;
     private int priority; //having 3 Qs; (Order from the highest priority to lowest) Q1 = systemProcess, Q2 = Interactive Process (Input/Output?)
     static String var;
     static String x;
-    static QueueObj systemQueue; //priority highest
     static QueueObj batchQueue; //priority lowest
-    static QueueObj interactiveQueue;
     static QueueObj queueOfQueues = new QueueObj(3);
 
 
     public Process(int processID, int priority, int programCounter) throws IOException {
         this.processID = processID;
-        this.priority = priority;
         this.programCounter = programCounter;
-        // processState = false;
+        this.processState = ProcessState.NEW;
         //MS1
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
-        String [] choice = input.split(" ");
-        if (choice[0].equals("print") || choice[0].equals("readfile"))
-            processA(choice);
-        else if (choice[0].equals("assign") || choice[0].equals("writefile"))
-            processB(choice[1],choice[2]);//Still incomplete NOT SURE!
+
 
         //MS2
         System.out.println("Number of process for system queue: ");//adjust this line later
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int numOfSP = Integer.parseInt(br.readLine());
-        systemQueue = new QueueObj(numOfSP);
+
 
         System.out.println("Number of process for interactive queue: ");
 
+    }
+
+    public void processA(String[] s) {
+        if (s[0].equals("print"))
+            OperatingSystem.print(s, var, x);
+        else if (s[0].equals("readfile"))
+            OperatingSystem.readfile(s);
+        else System.out.println("Command not defined!");
+    }
+
+    public void processB(String s1, String s2) {
+        if (s1.equals("writefile"))
+            OperatingSystem.writefile(s1, s2);
+        else if (s2.equals("assign"))
+            OperatingSystem.assign(s1, s2);
+    }
+
+    public static void main(String[] args) throws IOException {
+        Process p = new Process(1, 3, 4);
 
     }
-    enum TTY{
+
+    enum TTY {
         //Terminal or TTY: terminal to which the process is connected. han-save feeh which scheduling type we are calling
         ROUND_ROBIN, //uses Q1 and Q2
         MLQS,
@@ -56,8 +69,21 @@ public class Process {
 
     }
 
-    enum ProcessState{
-        NEW, READY, RUNNUNG, BLOCKED, FINISHED
+    enum ProcessState {
+        NEW, READY, RUNNING, BLOCKED, FINISHED //this will also be used on the queues
+        //for example
+    }
+
+    enum Priority{
+        HIGH, MED, LOW
+    }
+
+    public ProcessState getProcessState() {
+        return processState;
+    }
+
+    public void setProcessState(ProcessState processState) {
+        this.processState = processState;
     }
 
     public int getProcessID() {
@@ -76,132 +102,15 @@ public class Process {
         this.programCounter = programCounter;
     }
 
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public void  Scheduler_FCFS(){
-
-    }
-
-    public void Scheduler_RR(){
-        int Qt = 2; //Quantum time value
-        int waitTime[],TurnAroundTime[], burstTime[], burstTimeLeft[]; //set the size with the size of the Q
-        Process res[];
-        while(!systemQueue.isEmpty()) { //Q is not empty
-            //exec the process for Qt value with counter and condition to make sure u keep Enq and Deq
-        }
-    }
-
-    public void Scheduler_MLQS(){
-        /*
-        Queuing workflow:-
-
-        we will input whe process id into the queue not the entire process
-        enqueue in all queues with respect to the priority
-        for(int i = 0; i < Qnumbers; i++){
-            ba3deen go into Q[i] while !empty and exec then deque then do again
-            we check for Q1 if it is empty
-            if true we do RR for all the elements until it is empty
-            when Q1 is empty we go onto Q2
-            do the same logic as Q1
-            then after Q2 is empty
-            we execut Q3 using el fifo
-            }
-
-            we need to check what enters which queue
-         */
-    }
+//    public int getPriority() {
+//        return priority;
+//    }
+//
+//    public void setPriority(int priority) {
+//        this.priority = priority;
+//    }
 
 
 
-    public boolean isProcessState() {
-        return processState;
-    }
 
-    public void setProcessState(boolean processState) {
-        this.processState = processState;
-    }
-
-    public void processA(String[] s){
-        if (s[0].equals("print"))
-            print(s, var, x);
-        else if (s[0].equals("readfile"))
-            readfile(s);
-        else System.out.println("Command not defined!");
-    }
-
-    public void processB(String s1, String s2){
-        if (s1.equals("writefile"))
-            writefile(s1,s2);
-        else if (s2.equals("assign"))
-            assign(s1,s2);
-    }
-
-    public static void assign(String s1, String s2){
-        var = s1;
-        x = s2;
-        // we need to check the data type w assign it as ordered
-        System.out.println(x + " Has been Assigned to " + var);
-    }
-
-    public static void writefile(String s, String s1) {
-        try {
-            File myObj = new File(s+".txt");
-            if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
-            } else {
-                System.out.println("File already exists.");
-            }
-        } catch (Exception e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        try {
-            FileWriter myWriter = new FileWriter(s+".txt");
-            myWriter.write(s1);
-            myWriter.close();
-            System.out.println("Successfully wrote to the file.");
-        } catch (Exception e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
-
-    public static void print(String s[], String var, String x){
-        if (s[1].equals(var)){
-            System.out.println(x);
-        }else{
-            System.out.println();
-            for(int i = 1; i < s.length; i++)
-                System.out.print(s[i] + " ");
-            System.out.println();
-        }
-    }
-
-    public void CreateProcess(){
-        //we will hava a process queue w it will show the current process w order which process will
-        //go first (the ordering will be executed depending on type of scheduling algorithm
-        //NOTE: SEARCH HOW TO MAKE A PROCESS INTO A NEW PROCESS
-
-    }
-
-    public static void readfile(String s[]) {
-        try {
-            File myObj = new File(s[1]+".txt");
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                System.out.println(data);
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
 }
