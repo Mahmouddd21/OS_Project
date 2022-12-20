@@ -9,18 +9,69 @@ public class BinarySemaphore{
         this.q = q;
     }
 
-    public void SemWait(BinarySemaphore b, Process p) throws InterruptedException {
+    public void SemPrintWait(BinarySemaphore b, Process p) throws InterruptedException {
         if (b.proccesses == 1)
             b.proccesses = 0;
-        else
-            q.enqueue(p);
-        p.wait();
+        else{
+         while(b.proccesses==0){
+             System.out.println(p.getName()+" is on wait ");
+         }}
+        b.q.enqueue(p);
     }
 
-    public void SemSignal(BinarySemaphore b) {
+    public void SemPrintSignal(BinarySemaphore b) {
+        if (b.q.isEmpty())
+            b.proccesses=1;
+        //else
+        //    print(b.q.dequeue); //add to ready queue
+    }
+    public void SemAssignWait(BinarySemaphore b, Process p) throws InterruptedException {
+        if (b.proccesses == 1)
+            b.proccesses = 0;
+        else{
+            while(b.proccesses==0){
+                System.out.println(p.getName()+" is on wait ");
+            }}
+        b.q.enqueue(p);
+    }
+
+    public void SemAssignSignal(BinarySemaphore b) {
         if (b.q.isEmpty())
             b.proccesses=1;
         /*else
-            addToReadyList(b.q.dequeue());*/ //add to ready queue
+            Assign((b.q.dequeue);)*/ //add to ready queue
     }
+    public void SemWriteWait(BinarySemaphore b, Process p) throws InterruptedException {
+        if (b.proccesses == 1)
+            b.proccesses = 0;
+        else{
+            while(b.proccesses==0){
+                System.out.println(p.getName()+" is on wait ");
+            }}
+        b.q.enqueue(p);
+    }
+
+    public void SemWriteSignal(BinarySemaphore b) {
+        if (b.q.isEmpty())
+            b.proccesses=1;
+        /*else
+            Write(b.q.dequeue);*/ //add to ready queue
+    }
+    public void SemReadWait(BinarySemaphore b, Process p) throws InterruptedException {
+        if (b.proccesses == 1)
+            b.proccesses = 0;
+        else{
+            while(b.proccesses==0){
+                System.out.println(p.getName()+" is on wait ");
+            }}
+        b.q.enqueue(p);
+    }
+
+    public void SemReadSignal(BinarySemaphore b) {
+        if (b.q.isEmpty())
+            b.proccesses=1;
+        /*else
+            Read(b.q.dequeue);*/ //add to ready queue
+    }
+
 }
