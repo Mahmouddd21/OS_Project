@@ -1,3 +1,4 @@
+import javax.management.QueryEval;
 import java.io.*;
 import java.util.*;
 
@@ -11,9 +12,18 @@ enum EventsOS {
 
 public class OperatingSystem {
 
-    static QueueObj Q1;
-    static QueueObj Q2;
-    static QueueObj Q3;
+    static Queue<Integer> Q1 = new LinkedList<>();
+    static Queue<Integer> Q2 = new LinkedList<>();
+    static Queue<Integer> Q3 = new LinkedList<>();
+    static Queue<Integer> Q1arrvTime = new LinkedList<>();
+    static Queue<Integer> Q2arrvTime = new LinkedList<>();
+    static Queue<Integer> Q3arrvTime = new LinkedList<>();
+    static Queue<Integer> Q1runTime = new LinkedList<>();
+    static Queue<Integer> Q2runTime = new LinkedList<>();
+    static Queue<Integer> Q3runTime = new LinkedList<>();
+    static Queue<Integer> RRqueue = new LinkedList<>();
+    static Queue<Integer> RRarrvTimeQ = new LinkedList<>();
+    static Queue<Integer> RRrunTimeQ = new LinkedList<>();
     public static String memory[] = new String[6];
     static String var;
     static String x;
@@ -162,6 +172,7 @@ public class OperatingSystem {
 
     public static void main(String[] args) throws Exception {
 
+
         /*
         interrupts
         event 1
@@ -214,6 +225,47 @@ public class OperatingSystem {
         } while (true);
     }
 
+    //DO NOT DELETE THIS IS TO BE USED LATER
+    //MAYBE
+//    static void findWaitingTime(String proc[], int n, int bt[], int wt[], int at[]) {
+//        int service_time[] = new int[n];
+//        service_time[0] = 0;
+//        wt[0] = 0;
+//
+//        for (int i = 1; i < n; i++) {
+//            service_time[i] = service_time[i - 1] + bt[i - 1];
+//
+//            wt[i] = service_time[i] - at[i];
+//            if (wt[i] < 0)
+//                wt[i] = 0;
+//        }
+//    }
+//
+//    static void findTurnAroundTime(String proc[], int n, int bt[], int wt[], int tat[]) {
+//        for (int i = 0; i < n; i++)
+//            tat[i] = bt[i] + wt[i];
+//    }
+//
+//    float findavgTime(String proc[], int n, int bt[], int at[]) {
+//        int wt[] = new int[n], tat[] = new int[n];
+//
+//        findWaitingTime(proc, n, bt, wt, at);
+//        findTurnAroundTime(proc, n, bt, wt, tat);
+//
+//        System.out.print("Processes " + " Arrival Time " + " Burst Time " + " Waiting Time " + " Turn Around Time \n");
+//        int total_wt = 0, total_tat = 0;
+//        for (int i = 0; i < n; i++) {
+//            total_wt = total_wt + wt[i];
+//            total_tat = total_tat + tat[i];
+//            System.out.println(proc[i] + "\t\t" + at[i] + "\t\t" + bt[i] + "\t\t" + wt[i] + "\t\t " + tat[i]);
+//        }
+//
+//        System.out.println("Average waiting time = " + (float) total_wt / n);
+//        System.out.println("Average turn around time = " + (float) total_tat / n);
+//        return (float) total_wt / n;
+//    }
+
+
     public void Scheduler_FCFS() {
 
     }
@@ -222,7 +274,7 @@ public class OperatingSystem {
         int Qt = 2; //Quantum time value
         int waitTime[], TurnAroundTime[], burstTime[], burstTimeLeft[]; //set the size with the size of the Q
         Process res[];
-        while (!Q1.isEmpty()) { //Q is not empty
+        while (!RRqueue.isEmpty()) { //Q is not empty
             //exec the process for Qt value with counter and condition to make sure u keep Enq and Deq
         }
     }
@@ -249,30 +301,45 @@ public class OperatingSystem {
 
 
 
-    public void CreateProcess(Process p, Process.Priority priority, int arrvTime, int execTime) {
-        p.setProcessState(Process.ProcessState.NEW);
-        Scheduler_MLQS();
+    public void createProcess(Process p, Process.Priority priority, int arrvTime, int burstTime, boolean isMLQS) {
 
-        switch (priority){
-            case HIGH:
-                Q1.enqueue(p.getProcessID());
-                //this has RR
-                Scheduler_RR();
-                break;
-            case MED:
-                Q2.enqueue(p.getProcessID());
-                Scheduler_RR();
-                //this has RR
-                break;
-            case LOW:
-                Q3.enqueue(p.getProcessID());
-                Scheduler_FCFS();
-                //this has FCFS
-                break;
-            default:
-                System.out.println("specify the priority for the process");
+        //NOTE from Mahmoud: I think that we call the
+        p.setArrvTime(arrvTime);
+        p.setBurstTime(burstTime);
+
+        if (isMLQS) {
+            p.setProcessState(Process.ProcessState.NEW);
+            switch (priority) {
+                case HIGH:
+                    Q1.offer(p.getProcessID());
+                    Q1arrvTime.offer(arrvTime);
+                    Q1runTime.offer(burstTime);
+                   // Scheduler_FCFS();
+                    break;
+                case MED:
+                    Q2.offer(p.getProcessID());
+                    Q2arrvTime.offer(arrvTime);
+                    Q2runTime.offer(burstTime);
+                    //Scheduler_FCFS();
+                    //this has RR
+                    break;
+                case LOW:
+                    Q3.offer(p.getProcessID());
+                    Q3arrvTime.offer(arrvTime);
+                    Q3runTime.offer(burstTime);
+                    //Scheduler_FCFS();
+                    //this has FCFS
+                    break;
+                default:
+                    System.out.println("specify the priority for the process");
+            }
         }
 
+        else {
+            RRqueue.offer(p.getProcessID());
+            RRarrvTimeQ.offer(arrvTime);
+            RRrunTimeQ.offer(burstTime);
+        }
     }
 
 
@@ -283,6 +350,7 @@ public class OperatingSystem {
         // we need to check the data type w assign it as ordered
         System.out.println(x + " Has been Assigned to " + var);
     }
+
 
     public static void writefile(String s, String s1) {
         try {
@@ -332,4 +400,5 @@ public class OperatingSystem {
             e.printStackTrace();
         }
     }
+
 }
