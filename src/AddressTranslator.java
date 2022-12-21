@@ -16,11 +16,11 @@ public class AddressTranslator {
 
     private static int getPhysicalAddress(int logical, int pSize, ArrayList<String> pagetables) {
         int phyAddr = -1;
-        int pageNum = logical/pSize;
-        int offset = logical%pSize;
+        int pageNum = logical / pSize;
+        int offset = logical % pSize;
         System.out.println("Page number: " + pageNum);
         System.out.println("Offset: " + offset);
-        for (String e : pagetables){
+        for (String e : pagetables) {
             int pageIndex = Integer.parseInt(e.split(",")[0]);
             int startPhyAddr = Integer.parseInt(e.split(",")[1]);
             if (pageNum == pageIndex)

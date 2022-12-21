@@ -300,10 +300,8 @@ public class OperatingSystem {
     }
 
 
-
     public void createProcess(Process p, Process.Priority priority, int arrvTime, int burstTime, boolean isMLQS) {
 
-        //NOTE from Mahmoud: I think that we call the
         p.setArrvTime(arrvTime);
         p.setBurstTime(burstTime);
 
@@ -314,34 +312,26 @@ public class OperatingSystem {
                     Q1.offer(p.getProcessID());
                     Q1arrvTime.offer(arrvTime);
                     Q1runTime.offer(burstTime);
-                   // Scheduler_FCFS();
                     break;
                 case MED:
                     Q2.offer(p.getProcessID());
                     Q2arrvTime.offer(arrvTime);
                     Q2runTime.offer(burstTime);
-                    //Scheduler_FCFS();
-                    //this has RR
                     break;
                 case LOW:
                     Q3.offer(p.getProcessID());
                     Q3arrvTime.offer(arrvTime);
                     Q3runTime.offer(burstTime);
-                    //Scheduler_FCFS();
-                    //this has FCFS
                     break;
                 default:
                     System.out.println("specify the priority for the process");
             }
-        }
-
-        else {
+        } else {
             RRqueue.offer(p.getProcessID());
             RRarrvTimeQ.offer(arrvTime);
             RRrunTimeQ.offer(burstTime);
         }
     }
-
 
 
     public static void assign(String s1, String s2) {

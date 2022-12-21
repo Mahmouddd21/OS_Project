@@ -1,7 +1,8 @@
 import java.io.*;
 import java.util.*;
+
 //TEST FOR GITHUB
-public class Process {
+public class Process extends Thread {
     private int processID;
     private int programCounter;
     int arrvTime;
@@ -52,11 +53,11 @@ public class Process {
         this.burstTime = burstTime;
     }
 
-    enum ProcessState{
+    enum ProcessState {
         NEW, READY, RUNNUNG, BLOCKED, FINISHED
     }
 
-    enum Priority{
+    enum Priority {
         HIGH, MED, LOW
     }
 
@@ -84,7 +85,7 @@ public class Process {
         this.processState = processState;
     }
 
-    public void processA(String[] s){
+    public void processA(String[] s) {
         if (s[0].equals("print"))
             OperatingSystem.print(s, var, x);
         else if (s[0].equals("readfile"))
@@ -92,11 +93,11 @@ public class Process {
         else System.out.println("Command not defined!");
     }
 
-    public void processB(String s1, String s2){
+    public void processB(String s1, String s2) {
         if (s1.equals("writefile"))
-            OperatingSystem.writefile(s1,s2);
+            OperatingSystem.writefile(s1, s2);
         else if (s2.equals("assign"))
-            OperatingSystem.assign(s1,s2);
+            OperatingSystem.assign(s1, s2);
     }
 
 }
