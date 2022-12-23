@@ -11,12 +11,14 @@ public class Process extends Thread{
     int processType;
     int arrvTime;
     int burstTime;
+    boolean isRR;
     private ProcessState processState;
-    Priority priority; //having 3 Qs; (Order from the highest priority to lowest) Q1 = systemProcess, Q2 = Interactive Process (Input/Output?)
+    Priority priority;
     static String var;
     static String x;
 
     public Process(int processID, int processType) throws IOException {
+        processState = ProcessState.NEW;
         this.processID = processID;
         programCounter++;
         this.processType = processType;
@@ -72,44 +74,63 @@ public class Process extends Thread{
         this.processState = processState;
     }
 
-    public void processA() throws IOException {
+    public boolean isRR() {
+        return isRR;
+    }
+
+    public void setRR(boolean RR) {
+        isRR = RR;
+    }
+
+    public void processA() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
         String [] choice = input.split(" ");
-        if (choice[0].equals("print"))
+        if (choice[0].equals("print")) {
+            p.SemPrintWait(this);
             OperatingSystem.print(choice, var, x);
-        else if (choice[0].equals("readfile"))
+            p.SemPrintSignal();
+        }
+        else if (choice[0].equals("readfile")) {
+            r.SemReadWait(this);
             OperatingSystem.readfile(choice);
+            r.SemReadSignal();
+        }
         //else System.out.println("Command not defined!");
     }
 
-    public void processB() throws IOException {
+    public void processB() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
         String [] choice = input.split(" ");
-        if (choice[0].equals("writefile"))
-            OperatingSystem.writefile(choice[1],choice[2]);
-        else if (choice[0].equals("assign"))
+        if (choice[0].equals("writefile")) {
+            w.SemWriteWait(this);
+            OperatingSystem.writefile(choice[1], choice[2]);
+            w.SemWriteSignal();
+        }
+        else if (choice[0].equals("assign")){
+            a.SemAssignWait(this);
             OperatingSystem.assign(choice[1],choice[2]);
+            a.SemAssignSignal();
+        }
     }
 
     public void run(){
         if (processType == 1) {
             try {
                 processA();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         else if (processType == 2){
             try {
                 processB();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     public static void main(String[] args) throws IOException {
         Process p = new Process(0,1);

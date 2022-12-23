@@ -24,6 +24,8 @@ public class OperatingSystem {
     static Queue<Integer> RRqueue = new LinkedList<>();
     static Queue<Integer> RRarrvTimeQ = new LinkedList<>();
     static Queue<Integer> RRrunTimeQ = new LinkedList<>();
+    static ArrayList<Process> processes = new ArrayList<>();
+    Timer timer = new Timer();
     public static String memory[] = new String[6];
     static String var;
     static String x;
@@ -266,62 +268,89 @@ public class OperatingSystem {
 //    }
 
 
-    public void Scheduler_FCFS() {
-
+    public static void Scheduler_FCFS(Queue<Integer> proc) {
+        while (!proc.isEmpty()) {
+            for (int i = 0; i < processes.size(); i++) {
+                if (proc.peek() == processes.get(i).getProcessID()) {
+                    processes.get(i).run();
+                    processes.get(i).setProcessState(Process.ProcessState.RUNNUNG);
+                    System.out.println("Process ID: " + processes.get(i).getProcessID() + " is running");
+                }
+            }
+            proc.remove();
+        }
     }
 
     public void Scheduler_RR() {
-        int Qt = 2; //Quantum time value
-        int waitTime[], TurnAroundTime[], burstTime[], burstTimeLeft[]; //set the size with the size of the Q
-        Process res[];
-        while (!RRqueue.isEmpty()) { //Q is not empty
-            //exec the process for Qt value with counter and condition to make sure u keep Enq and Deq
+        if (RRqueue.isEmpty()) {
+            System.out.println("Queue is empty");
+            return;
+        } else {
+            while (!RRqueue.isEmpty()) {
+                long start = System.currentTimeMillis();
+                long end = start + 2;
+                for (int i = 0; i < processes.size(); i++) {
+                    if (RRqueue.peek() == processes.get(i).getProcessID()) {
+                        if (!processes.get(i).isAlive()) {
+                            processes.get(i).setProcessState(Process.ProcessState.FINISHED);
+                            System.out.println("Process ID: " + processes.get(i).getProcessID() + " is finished");
+                            RRqueue.remove();
+                        }
+                    } else {
+                        while (System.currentTimeMillis() < end) {
+                            processes.get(i).run();
+                            processes.get(i).setProcessState(Process.ProcessState.RUNNUNG);
+                            System.out.println("Process ID: " + processes.get(i).getProcessID() + " is running");
+                        }
+                        processes.get(i).setProcessState(Process.ProcessState.BLOCKED);
+                        RRqueue.offer(RRqueue.remove());
+                    }
+                }
+            }
         }
     }
 
     public static void Scheduler_MLQS() {
-        /*
-        Queuing workflow:-
-
-        we will input whe process id into the queue not the entire process
-        enqueue in all queues with respect to the priority
-        for(int i = 0; i < Qnumbers; i++){
-            ba3deen go into Q[i] while !empty and exec then deque then do again
-            we check for Q1 if it is empty
-            if true we do RR for all the elements until it is empty
-            when Q1 is empty we go onto Q2
-            do the same logic as Q1
-            then after Q2 is empty
-            we execut Q3 using el fifo
-            }
-
-            we need to check what enters which queue
-         */
+        while (!Q1.isEmpty()) {
+            Scheduler_FCFS(Q1);
+            System.out.println("Queue 1 is finished");
+        }
+        while (Q1.isEmpty() && !Q2.isEmpty()) {
+            Scheduler_FCFS(Q2);
+            System.out.println("Queue 2 is finished");
+        }
+        while (Q1.isEmpty() && Q2.isEmpty() && !Q3.isEmpty()) {
+            Scheduler_FCFS(Q3);
+            System.out.println("Queue 1 is finished");
+        }
     }
 
-
     public void createProcess(Process p, Process.Priority priority, int arrvTime, int burstTime, boolean isMLQS) {
+
+        processes.add(p);
 
         p.setArrvTime(arrvTime);
         p.setBurstTime(burstTime);
 
         if (isMLQS) {
-            p.setProcessState(Process.ProcessState.NEW);
             switch (priority) {
                 case HIGH:
                     Q1.offer(p.getProcessID());
                     Q1arrvTime.offer(arrvTime);
                     Q1runTime.offer(burstTime);
+                    p.setProcessState(Process.ProcessState.READY);
                     break;
                 case MED:
                     Q2.offer(p.getProcessID());
                     Q2arrvTime.offer(arrvTime);
                     Q2runTime.offer(burstTime);
+                    p.setProcessState(Process.ProcessState.READY);
                     break;
                 case LOW:
                     Q3.offer(p.getProcessID());
                     Q3arrvTime.offer(arrvTime);
                     Q3runTime.offer(burstTime);
+                    p.setProcessState(Process.ProcessState.READY);
                     break;
                 default:
                     System.out.println("specify the priority for the process");
@@ -330,7 +359,9 @@ public class OperatingSystem {
             RRqueue.offer(p.getProcessID());
             RRarrvTimeQ.offer(arrvTime);
             RRrunTimeQ.offer(burstTime);
+            p.setProcessState(Process.ProcessState.READY);
         }
+
     }
 
 
@@ -390,5 +421,4 @@ public class OperatingSystem {
             e.printStackTrace();
         }
     }
-
 }
