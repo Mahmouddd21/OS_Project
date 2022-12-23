@@ -1,12 +1,8 @@
 import java.io.*;
 import java.util.*;
-
 //TEST FOR GITHUB
-public class Process extends Thread {
-    private SemRead r = new SemRead();
-    private SemAssign a = new SemAssign();
-    private SemPrint p = new SemPrint();
-    private SemWrite w = new SemWrite();
+public class Process extends Thread{
+
     private int processID;
     private static int programCounter;
     int processType;
@@ -18,14 +14,18 @@ public class Process extends Thread {
     static String var;
     static String x;
 
-    public Process(int processID, int processType) throws IOException {
+    public Process(int processID, int processType, boolean isRR) throws IOException {
         processState = ProcessState.NEW;
         this.processID = processID;
         programCounter++;
         this.processType = processType;
+        this.isRR = isRR;
+        if (isRR){
         Thread t = new Thread(this);
         t.start();
+        }
     }
+
 
     public int getArrvTime() {
         return arrvTime;
@@ -43,11 +43,11 @@ public class Process extends Thread {
         this.burstTime = burstTime;
     }
 
-    enum ProcessState {
+    enum ProcessState{
         NEW, READY, RUNNUNG, BLOCKED, FINISHED
     }
 
-    enum Priority {
+    enum Priority{
         HIGH, MED, LOW
     }
 
@@ -86,12 +86,18 @@ public class Process extends Thread {
     public void processA() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
-        String[] choice = input.split(" ");
+        String [] choice = input.split(" ");
+        System.out.println("entered process A method");
         if (choice[0].equals("print")) {
+            System.out.println("entered print method");
+            SemPrint p =new SemPrint();
             p.SemPrintWait(this);
             OperatingSystem.print(choice, var, x);
             p.SemPrintSignal();
-        } else if (choice[0].equals("readfile")) {
+        }
+        else if (choice[0].equals("readfile")) {
+            System.out.println("entered readfile method");
+            SemRead r = new SemRead();
             r.SemReadWait(this);
             OperatingSystem.readfile(choice);
             r.SemReadSignal();
@@ -101,32 +107,49 @@ public class Process extends Thread {
     public void processB() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
-        String[] choice = input.split(" ");
+        String [] choice = input.split(" ");
+        System.out.println("entered process B method");
+
         if (choice[0].equals("writefile")) {
+            System.out.println("entered writefile method");
+            SemWrite w = new SemWrite();
             w.SemWriteWait(this);
             OperatingSystem.writefile(choice[1], choice[2]);
             w.SemWriteSignal();
-        } else if (choice[0].equals("assign")) {
+        }
+        else if (choice[0].equals("assign")){
+            System.out.println("entered assign method");
+            SemAssign a = new SemAssign();
             a.SemAssignWait(this);
-            OperatingSystem.assign(choice[1], choice[2]);
+            OperatingSystem.assign(choice[1],choice[2]);
             a.SemAssignSignal();
         }
     }
 
-    public void run() {
+    public void run(){
         if (processType == 1) {
             try {
                 processA();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (processType == 2) {
+        }
+        else if (processType == 2){
             try {
                 processB();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+//        Process p = new Process(0,1);
+//        Process p1 = new Process(1,2);
+//        p1.run();
+//        p.run();
+//        long startTime = System.currentTimeMillis();
+//        System.out.println(startTime);
     }
 
 }

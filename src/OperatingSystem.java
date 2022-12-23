@@ -1,8 +1,13 @@
+import javax.management.QueryEval;
 import java.io.*;
 import java.util.*;
 
 enum EventsOS {
-    USER_INPUT, DISK_CONTROLLER, REQ_MORE_HEAP, DIVISON_BY_ZERO, ACCESS_PRIVILIGED_MEMORY
+    USER_INPUT,
+    DISK_CONTROLLER,
+    REQ_MORE_HEAP,
+    DIVISON_BY_ZERO,
+    ACCESS_PRIVILIGED_MEMORY
 }
 
 public class OperatingSystem {
@@ -20,18 +25,19 @@ public class OperatingSystem {
     static Queue<Integer> RRarrvTimeQ = new LinkedList<>();
     static Queue<Integer> RRrunTimeQ = new LinkedList<>();
     static ArrayList<Process> processes = new ArrayList<>();
-    public static String[] memory = new String[6];
+    public static String memory[] = new String[6];
     static String var;
     static String x;
     public static int heapIndex = 0;
     public static int heapEnd = 2;
-    public static String[] privateMemory = new String[4];
+    public static String privateMemory[] = new String[4];
     public static int privateMemoryIndex = 0;
     private static int processProgramCounter = 0;
 
     public static void genrateRandomEvent() throws Exception {
         int random = (int) (Math.random() * 5);
-        EventsOS[] events = new EventsOS[]{EventsOS.USER_INPUT, EventsOS.DISK_CONTROLLER, EventsOS.REQ_MORE_HEAP, EventsOS.DIVISON_BY_ZERO, EventsOS.ACCESS_PRIVILIGED_MEMORY};
+        EventsOS[] events = new EventsOS[]{EventsOS.USER_INPUT, EventsOS.DISK_CONTROLLER, EventsOS.REQ_MORE_HEAP,
+                EventsOS.DIVISON_BY_ZERO, EventsOS.ACCESS_PRIVILIGED_MEMORY};
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input;
@@ -84,7 +90,8 @@ public class OperatingSystem {
                 break;
             case REQ_MORE_HEAP:
                 System.out.println("Checking if memory is free...");
-                if (heapEnd < heapIndex) System.out.println("Free memory is available");
+                if (heapEnd < heapIndex)
+                    System.out.println("Free memory is available");
                 else {
                     System.out.println(Arrays.toString(memory));
                     System.out.println("!Error!\n!Memory is Full! Expanding Heap");
@@ -125,7 +132,6 @@ public class OperatingSystem {
                 break;
         }
     }
-    //MS1
 //    public static void chooseProcess() throws Exception {
 //        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        String input = br.readLine();
@@ -165,75 +171,64 @@ public class OperatingSystem {
         return res;
     }
 
-    public static void main(String[] args) throws Exception {
+    //DO NOT DELETE THIS IS TO BE USED LATER
+    //MAYBE
+//    static void findWaitingTime(String proc[], int n, int bt[], int wt[], int at[]) {
+//        int service_time[] = new int[n];
+//        service_time[0] = 0;
+//        wt[0] = 0;
+//
+//        for (int i = 1; i < n; i++) {
+//            service_time[i] = service_time[i - 1] + bt[i - 1];
+//
+//            wt[i] = service_time[i] - at[i];
+//            if (wt[i] < 0)
+//                wt[i] = 0;
+//        }
+//    }
+//
+//    static void findTurnAroundTime(String proc[], int n, int bt[], int wt[], int tat[]) {
+//        for (int i = 0; i < n; i++)
+//            tat[i] = bt[i] + wt[i];
+//    }
+//
+//    float findavgTime(String proc[], int n, int bt[], int at[]) {
+//        int wt[] = new int[n], tat[] = new int[n];
+//
+//        findWaitingTime(proc, n, bt, wt, at);
+//        findTurnAroundTime(proc, n, bt, wt, tat);
+//
+//        System.out.print("Processes " + " Arrival Time " + " Burst Time " + " Waiting Time " + " Turn Around Time \n");
+//        int total_wt = 0, total_tat = 0;
+//        for (int i = 0; i < n; i++) {
+//            total_wt = total_wt + wt[i];
+//            total_tat = total_tat + tat[i];
+//            System.out.println(proc[i] + "\t\t" + at[i] + "\t\t" + bt[i] + "\t\t" + wt[i] + "\t\t " + tat[i]);
+//        }
+//
+//        System.out.println("Average waiting time = " + (float) total_wt / n);
+//        System.out.println("Average turn around time = " + (float) total_tat / n);
+//        return (float) total_wt / n;
+//    }
 
-
-        /*
-        interrupts
-        event 1
-        user enters 7aga 3al keyboard
-        action 1
-        7aga gets stored f arraylist aw stack aw wtv
-
-        event 2
-        disk controller finishes reading el data
-        action 2
-        haykoon busy aw idle represented by true aw false masln w 3ando read w write
-
-        exceptions
-        event 3
-        request more heap
-        action 3
-         check law el stack empty law true !full y2ba allocate, law full else throw excpetion
-
-        event 4
-        zero divison
-        action 4
-        throw exception + kill process  //operation
-
-        event 5
-         hat7awel t-access private memor
-        action
-         throw exception cannot access private memory
-        */ // <- expand me
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input;
-        do {
-            System.out.println("----------------------------------------------------------------");
-            System.out.println("Choose:\n1)Genrate Random Event\n2)Process\n");
-            System.out.println("----------------------------------------------------------------");
-            input = br.readLine();
-
-            switch (input) {
-                case "1":
-                    genrateRandomEvent();
-                    break;
-                case "2":
-                    //    chooseProcess(); break;
-                case "exit":
-                    System.exit(1);
-                    break;
-                default:
-                    System.out.println("Invalid Input");
-                    break;
-            }
-        } while (true);
-    }
 
     public static void Scheduler_FCFS(Queue<Integer> proc) {
         while (!proc.isEmpty()) {
             for (int i = 0; i < processes.size(); i++) {
                 if (proc.peek() == processes.get(i).getProcessID()) {
-                    processes.get(i).run();
+//                    processes.get(i).run();
+                    Thread t = new Thread(processes.get(i));
+                    t.run();
                     processes.get(i).setProcessState(Process.ProcessState.RUNNUNG);
                     System.out.println("Process ID: " + processes.get(i).getProcessID() + " is running");
                 }
             }
+            System.out.println(proc.toArray().toString());
             proc.remove();
         }
     }
 
-    public void Scheduler_RR() {
+    public static void Scheduler_RR() throws InterruptedException {
         if (RRqueue.isEmpty()) {
             System.out.println("Queue is empty");
             return;
@@ -251,9 +246,12 @@ public class OperatingSystem {
                     } else {
                         while (System.currentTimeMillis() < end) {
                             processes.get(i).run();
+//                            Thread t = new Thread(processes.get(i));
+//                            t.run();
                             processes.get(i).setProcessState(Process.ProcessState.RUNNUNG);
                             System.out.println("Process ID: " + processes.get(i).getProcessID() + " is running");
                         }
+                        processes.get(i).wait((RRqueue.size() * 2) - 2);
                         processes.get(i).setProcessState(Process.ProcessState.BLOCKED);
                         RRqueue.offer(RRqueue.remove());
                     }
@@ -263,45 +261,60 @@ public class OperatingSystem {
     }
 
     public static void Scheduler_MLQS() {
-        while (!Q1.isEmpty()) {
+
+        while (!Q1.isEmpty()){
             Scheduler_FCFS(Q1);
             System.out.println("Queue 1 is finished");
         }
-        while (Q1.isEmpty() && !Q2.isEmpty()) {
+
+        //        while (!Q1.isEmpty()) {
+//            Scheduler_FCFS(Q1);
+//            System.out.println("Queue 1 is finished");
+//            if (Q1.isEmpty()) flagQ1 = true;
+//            if (flagQ1){
+//                while (!Q2.isEmpty()) {
+//                    Scheduler_FCFS(Q2);
+//                    System.out.println("Queue 2 is finished");
+//                    if (Q2.isEmpty()) flagQ2 = true;
+//                    if (flagQ2){
+//                        while (!Q3.isEmpty()) {
+//                            Scheduler_FCFS(Q3);
+//                            System.out.println("Queue 3 is finished");
+//                            if (Q3.isEmpty()) flagQ3 = true;
+//                            if (flagQ3) return;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        while (!Q2.isEmpty()) {
             Scheduler_FCFS(Q2);
             System.out.println("Queue 2 is finished");
         }
-        while (Q1.isEmpty() && Q2.isEmpty() && !Q3.isEmpty()) {
+        while (!Q3.isEmpty()) {
             Scheduler_FCFS(Q3);
-            System.out.println("Queue 1 is finished");
+            System.out.println("Queue 3 is finished");
         }
     }
 
-    public void createProcess(Process p, Process.Priority priority, int arrvTime, int burstTime, boolean isMLQS) {
-
+    public static void createProcess(Process p, Process.Priority priority) {
         processes.add(p);
 
-        p.setArrvTime(arrvTime);
-        p.setBurstTime(burstTime);
-
-        if (isMLQS) {
+        if (!p.isRR) {
             switch (priority) {
                 case HIGH:
                     Q1.offer(p.getProcessID());
-                    Q1arrvTime.offer(arrvTime);
-                    Q1runTime.offer(burstTime);
+                    System.out.println(p.getProcessID() + " has been added to the HIGH prio queue");
                     p.setProcessState(Process.ProcessState.READY);
                     break;
                 case MED:
                     Q2.offer(p.getProcessID());
-                    Q2arrvTime.offer(arrvTime);
-                    Q2runTime.offer(burstTime);
+                    System.out.println(p.getProcessID() + " has been added to the MED prio queue");
                     p.setProcessState(Process.ProcessState.READY);
                     break;
                 case LOW:
                     Q3.offer(p.getProcessID());
-                    Q3arrvTime.offer(arrvTime);
-                    Q3runTime.offer(burstTime);
+                    System.out.println(p.getProcessID() + " has been added to the LOW prio queue");
                     p.setProcessState(Process.ProcessState.READY);
                     break;
                 default:
@@ -309,18 +322,14 @@ public class OperatingSystem {
             }
         } else {
             RRqueue.offer(p.getProcessID());
-            RRarrvTimeQ.offer(arrvTime);
-            RRrunTimeQ.offer(burstTime);
             p.setProcessState(Process.ProcessState.READY);
         }
-
     }
 
 
     public static void assign(String s1, String s2) {
         var = s1;
         x = s2;
-        // we need to check the data type w assign it as ordered
         System.out.println(x + " Has been Assigned to " + var);
     }
 
@@ -372,5 +381,37 @@ public class OperatingSystem {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+
+        //for MLQS
+        Process p1 = new Process(0,2,false);
+        Process tmp = new Process(10,2,false);
+        Process p2 = new Process(1,2,false);
+//        Process p3 = new Process(2,1);
+//        Process p4 = new Process(3, 2);
+////
+        createProcess(tmp, Process.Priority.HIGH);
+        createProcess(p2, Process.Priority.MED);
+        createProcess(p1, Process.Priority.LOW);
+//        createProcess(p4, Process.Priority.HIGH,true);
+//        createProcess(p3, Process.Priority.HIGH,true);
+//
+       Scheduler_MLQS();
+
+        //for RR
+//        Process p5 = new Process(4,1, true);
+//        Process p6 = new Process(5,2, true);
+////        Process p7 = new Process(6,1);
+////        Process p8 = new Process(7,2);
+////
+//        createProcess(p5,null);
+//        createProcess(p6,null);
+//////        createProcess(p7,null,false);
+//////        createProcess(p8,null,false);
+////
+//        Scheduler_RR();
     }
 }
