@@ -1,13 +1,8 @@
-import javax.management.QueryEval;
 import java.io.*;
 import java.util.*;
 
 enum EventsOS {
-    USER_INPUT,
-    DISK_CONTROLLER,
-    REQ_MORE_HEAP,
-    DIVISON_BY_ZERO,
-    ACCESS_PRIVILIGED_MEMORY
+    USER_INPUT, DISK_CONTROLLER, REQ_MORE_HEAP, DIVISON_BY_ZERO, ACCESS_PRIVILIGED_MEMORY
 }
 
 public class OperatingSystem {
@@ -25,20 +20,18 @@ public class OperatingSystem {
     static Queue<Integer> RRarrvTimeQ = new LinkedList<>();
     static Queue<Integer> RRrunTimeQ = new LinkedList<>();
     static ArrayList<Process> processes = new ArrayList<>();
-    Timer timer = new Timer();
-    public static String memory[] = new String[6];
+    public static String[] memory = new String[6];
     static String var;
     static String x;
     public static int heapIndex = 0;
     public static int heapEnd = 2;
-    public static String privateMemory[] = new String[4];
+    public static String[] privateMemory = new String[4];
     public static int privateMemoryIndex = 0;
     private static int processProgramCounter = 0;
 
     public static void genrateRandomEvent() throws Exception {
         int random = (int) (Math.random() * 5);
-        EventsOS[] events = new EventsOS[]{EventsOS.USER_INPUT, EventsOS.DISK_CONTROLLER, EventsOS.REQ_MORE_HEAP,
-                EventsOS.DIVISON_BY_ZERO, EventsOS.ACCESS_PRIVILIGED_MEMORY};
+        EventsOS[] events = new EventsOS[]{EventsOS.USER_INPUT, EventsOS.DISK_CONTROLLER, EventsOS.REQ_MORE_HEAP, EventsOS.DIVISON_BY_ZERO, EventsOS.ACCESS_PRIVILIGED_MEMORY};
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input;
@@ -91,8 +84,7 @@ public class OperatingSystem {
                 break;
             case REQ_MORE_HEAP:
                 System.out.println("Checking if memory is free...");
-                if (heapEnd < heapIndex)
-                    System.out.println("Free memory is available");
+                if (heapEnd < heapIndex) System.out.println("Free memory is available");
                 else {
                     System.out.println(Arrays.toString(memory));
                     System.out.println("!Error!\n!Memory is Full! Expanding Heap");
@@ -133,6 +125,7 @@ public class OperatingSystem {
                 break;
         }
     }
+    //MS1
 //    public static void chooseProcess() throws Exception {
 //        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        String input = br.readLine();
@@ -226,47 +219,6 @@ public class OperatingSystem {
             }
         } while (true);
     }
-
-    //DO NOT DELETE THIS IS TO BE USED LATER
-    //MAYBE
-//    static void findWaitingTime(String proc[], int n, int bt[], int wt[], int at[]) {
-//        int service_time[] = new int[n];
-//        service_time[0] = 0;
-//        wt[0] = 0;
-//
-//        for (int i = 1; i < n; i++) {
-//            service_time[i] = service_time[i - 1] + bt[i - 1];
-//
-//            wt[i] = service_time[i] - at[i];
-//            if (wt[i] < 0)
-//                wt[i] = 0;
-//        }
-//    }
-//
-//    static void findTurnAroundTime(String proc[], int n, int bt[], int wt[], int tat[]) {
-//        for (int i = 0; i < n; i++)
-//            tat[i] = bt[i] + wt[i];
-//    }
-//
-//    float findavgTime(String proc[], int n, int bt[], int at[]) {
-//        int wt[] = new int[n], tat[] = new int[n];
-//
-//        findWaitingTime(proc, n, bt, wt, at);
-//        findTurnAroundTime(proc, n, bt, wt, tat);
-//
-//        System.out.print("Processes " + " Arrival Time " + " Burst Time " + " Waiting Time " + " Turn Around Time \n");
-//        int total_wt = 0, total_tat = 0;
-//        for (int i = 0; i < n; i++) {
-//            total_wt = total_wt + wt[i];
-//            total_tat = total_tat + tat[i];
-//            System.out.println(proc[i] + "\t\t" + at[i] + "\t\t" + bt[i] + "\t\t" + wt[i] + "\t\t " + tat[i]);
-//        }
-//
-//        System.out.println("Average waiting time = " + (float) total_wt / n);
-//        System.out.println("Average turn around time = " + (float) total_tat / n);
-//        return (float) total_wt / n;
-//    }
-
 
     public static void Scheduler_FCFS(Queue<Integer> proc) {
         while (!proc.isEmpty()) {

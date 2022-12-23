@@ -1,10 +1,11 @@
 import java.io.*;
 import java.util.*;
+
 //TEST FOR GITHUB
-public class Process extends Thread{
+public class Process extends Thread {
     private SemRead r = new SemRead();
     private SemAssign a = new SemAssign();
-    private SemPrint p =new SemPrint();
+    private SemPrint p = new SemPrint();
     private SemWrite w = new SemWrite();
     private int processID;
     private static int programCounter;
@@ -42,11 +43,11 @@ public class Process extends Thread{
         this.burstTime = burstTime;
     }
 
-    enum ProcessState{
+    enum ProcessState {
         NEW, READY, RUNNUNG, BLOCKED, FINISHED
     }
 
-    enum Priority{
+    enum Priority {
         HIGH, MED, LOW
     }
 
@@ -85,60 +86,47 @@ public class Process extends Thread{
     public void processA() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
-        String [] choice = input.split(" ");
+        String[] choice = input.split(" ");
         if (choice[0].equals("print")) {
             p.SemPrintWait(this);
             OperatingSystem.print(choice, var, x);
             p.SemPrintSignal();
-        }
-        else if (choice[0].equals("readfile")) {
+        } else if (choice[0].equals("readfile")) {
             r.SemReadWait(this);
             OperatingSystem.readfile(choice);
             r.SemReadSignal();
         }
-        //else System.out.println("Command not defined!");
     }
 
     public void processB() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
-        String [] choice = input.split(" ");
+        String[] choice = input.split(" ");
         if (choice[0].equals("writefile")) {
             w.SemWriteWait(this);
             OperatingSystem.writefile(choice[1], choice[2]);
             w.SemWriteSignal();
-        }
-        else if (choice[0].equals("assign")){
+        } else if (choice[0].equals("assign")) {
             a.SemAssignWait(this);
-            OperatingSystem.assign(choice[1],choice[2]);
+            OperatingSystem.assign(choice[1], choice[2]);
             a.SemAssignSignal();
         }
     }
 
-    public void run(){
+    public void run() {
         if (processType == 1) {
             try {
                 processA();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else if (processType == 2){
+        } else if (processType == 2) {
             try {
                 processB();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        Process p = new Process(0,1);
-        Process p1 = new Process(1,2);
-        p.start();
-        p1.start();
-//        long startTime = System.currentTimeMillis();
-//        System.out.println(startTime);
     }
 
 }

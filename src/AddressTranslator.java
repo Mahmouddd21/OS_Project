@@ -23,11 +23,9 @@ public class AddressTranslator {
         for (String e : pagetables) {
             int pageIndex = Integer.parseInt(e.split(",")[0]);
             int startPhyAddr = Integer.parseInt(e.split(",")[1]);
-            if (pageNum == pageIndex)
-                phyAddr = startPhyAddr + offset;
+            if (pageNum == pageIndex) phyAddr = startPhyAddr + offset;
         }
-        if (phyAddr == -1)
-            return 0;
+        if (phyAddr == -1) return 0;
         return phyAddr;
     }
 

@@ -1,14 +1,16 @@
-public class SemAssign extends Sem{
+public class SemAssign extends Sem {
     public static int s;
 
-    public SemAssign(){
+    public SemAssign() {
         super();
     }
-    public void SemAssignWait(Process p) throws Exception{
+
+    public void SemAssignWait(Process p) throws Exception {
         super.SemWait(p);
 
     }
-    public void SemAssignSignal(){
+
+    public void SemAssignSignal() {
         super.SemSignal();
         System.out.println("Assign resource is now Free");
     }
