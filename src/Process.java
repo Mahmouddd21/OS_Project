@@ -1,40 +1,23 @@
 import java.io.*;
 import java.util.*;
-
 //TEST FOR GITHUB
-public class Process extends Thread {
+public class Process extends Thread{
     private int processID;
-    private int programCounter;
+    private static int programCounter;
+    int processType;
     int arrvTime;
     int burstTime;
     private ProcessState processState;
     Priority priority; //having 3 Qs; (Order from the highest priority to lowest) Q1 = systemProcess, Q2 = Interactive Process (Input/Output?)
     static String var;
     static String x;
-    static QueueObj queueOfQueues = new QueueObj(3);
 
-    public Process(int processID, int programCounter) throws IOException {
+    public Process(int processID, int processType) throws IOException {
         this.processID = processID;
-        this.programCounter = programCounter;
-        // processState = false;
-//        //MS1
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        String input = br.readLine();
-//        String [] choice = input.split(" ");
-//        if (choice[0].equals("print") || choice[0].equals("readfile"))
-//            processA(choice);
-//        else if (choice[0].equals("assign") || choice[0].equals("writefile"))
-//            processB(choice[1],choice[2]);//Still incomplete NOT SURE!
-
-        //MS2
-//        System.out.println("Number of process for system queue: ");//adjust this line later
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-//        int numOfSP = Integer.parseInt(br.readLine());
-//        systemQueue = new QueueObj(numOfSP);
-//
-//        System.out.println("Number of process for interactive queue: ");
-
-
+        programCounter++;
+        this.processType = processType;
+        Thread t = new Thread(this);
+        t.start();
     }
 
     public int getArrvTime() {
@@ -53,11 +36,11 @@ public class Process extends Thread {
         this.burstTime = burstTime;
     }
 
-    enum ProcessState {
+    enum ProcessState{
         NEW, READY, RUNNUNG, BLOCKED, FINISHED
     }
 
-    enum Priority {
+    enum Priority{
         HIGH, MED, LOW
     }
 
@@ -85,19 +68,52 @@ public class Process extends Thread {
         this.processState = processState;
     }
 
-    public void processA(String[] s) {
-        if (s[0].equals("print"))
-            OperatingSystem.print(s, var, x);
-        else if (s[0].equals("readfile"))
-            OperatingSystem.readfile(s);
-        else System.out.println("Command not defined!");
+    public void processA() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String input = br.readLine();
+        String [] choice = input.split(" ");
+        if (choice[0].equals("print"))
+            OperatingSystem.print(choice, var, x);
+        else if (choice[0].equals("readfile"))
+            OperatingSystem.readfile(choice);
+        //else System.out.println("Command not defined!");
     }
 
-    public void processB(String s1, String s2) {
-        if (s1.equals("writefile"))
-            OperatingSystem.writefile(s1, s2);
-        else if (s2.equals("assign"))
-            OperatingSystem.assign(s1, s2);
+    public void processB() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String input = br.readLine();
+        String [] choice = input.split(" ");
+        if (choice[0].equals("writefile"))
+            OperatingSystem.writefile(choice[1],choice[2]);
+        else if (choice[0].equals("assign"))
+            OperatingSystem.assign(choice[1],choice[2]);
+    }
+
+    public void run(){
+        if (processType == 1) {
+            try {
+                processA();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (processType == 2){
+            try {
+                processB();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        Process p = new Process(0,1);
+        Process p1 = new Process(1,2);
+        p.start();
+        p1.start();
+//        long startTime = System.currentTimeMillis();
+//        System.out.println(startTime);
     }
 
 }
