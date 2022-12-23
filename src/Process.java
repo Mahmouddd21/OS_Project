@@ -3,6 +3,10 @@ import java.util.*;
 
 //TEST FOR GITHUB
 public class Process extends Thread {
+    private SemRead r = new SemRead();
+    private SemAssign a = new SemAssign();
+    private SemPrint p =new SemPrint();
+    private SemWrite w = new SemWrite();
     private int processID;
     private int programCounter;
     int arrvTime;
